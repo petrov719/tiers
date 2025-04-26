@@ -40,7 +40,7 @@ export default {
         edit_tierlist_item(){
           if (this.name != '' && this.item_id != ''){
             axios.post('tierlist_item/edit',{item_id:String(this.item_id), name:this.name, description:this.description}).then(response => {
-              this.$router.push('/creating/items')
+              this.$router.push("/creating/items/"+this.$route.params.id)
             })
           } else {
             alert("НАЗВАНИЕ!")

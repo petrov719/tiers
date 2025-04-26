@@ -107,7 +107,7 @@ export default {
         })
       },
       edit_tierlist_item(data){
-        this.$router.push('/creating/items/edit_'+this.$route.params.id+''+data.id)
+        this.$router.push('/creating/items/edit_'+this.$route.params.id+'a'+data.id)
       },
       clone(){
         axios.post('tierlist_item/clone',{ot: this.clone_tierlist, to: this.$route.params.id}).then(response=>{

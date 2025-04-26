@@ -24,7 +24,7 @@ import axios from 'axios'
 export default {
     name: 'LoginPage',
     data: () => ({
-        logindata:{mail:'pseregko@gmail.com', password:'123'},
+        logindata:{mail:'', password:''},
     }),
     methods: {
         Login(){

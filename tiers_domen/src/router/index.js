@@ -63,7 +63,7 @@ const routes = [
     component: CreatingItemsCreate
   },
   {
-    path: '/creating/items/edit_:id:item_id',
+    path: '/creating/items/edit_:id*a:item_id',
     name: 'EditItems',
     component: EditItems
   },

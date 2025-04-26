@@ -39,7 +39,7 @@ export default {
       create_tierlist_item(){
           if (this.name != ''){
             axios.post('tierlist_item/create',{name: this.name, description: this.description, tierlist_id: this.$route.params.id}).then(response => {
-              this.$router.push('/creating/items')
+              this.$router.push('/creating/items/' + this.$route.params.id)
             })
           } else {
             alert("НАЗВАНИЕ!")
