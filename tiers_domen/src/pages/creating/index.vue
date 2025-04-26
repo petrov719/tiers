@@ -40,7 +40,7 @@
           >
           <template v-slot:[`item.actions`]="{ item }">
             <v-btn color="blue" @click="edit_tierlist(item)"><v-icon>mdi-pen</v-icon></v-btn>
-            <v-btn color="purple" @click="manage_items(item)"><v-icon>mdi-package-variant-closed-plus</v-icon></v-btn>
+            <v-btn color="purple" @click="manage_items(item)"><v-icon>mdi-package-variant-closed</v-icon></v-btn>
           </template>
           </v-data-table>
         </v-col>
@@ -78,8 +78,9 @@ export default {
       edit_tierlist(tierlist){
         this.$router.push('/creating/'+tierlist.id)
       },
-      mounted() {
-      },
+    },
+    mounted() {
+      this.getdata()
     },
 }
 </script>

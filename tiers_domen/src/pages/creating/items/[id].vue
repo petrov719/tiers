@@ -118,11 +118,13 @@ export default {
         console.log(this.clone_tierlist)
       },
       mounted() {
-        console.log(this.$route.params.id)
         axios.post('tierlist/index',{tierlist_id: this.$route.params.id}).then(response=>{
             this.tierlist_name = response.data.name
         })
       },
+    },
+    mounted() {
+      this.getdata()
     },
 }
 </script>

@@ -72,9 +72,9 @@ export default {
       edit_tierlist(tierlisting_eidt){
         this.$router.push('/making/'+tierlisting_eidt.id)
       },
-      mounted() {
-        this.getdata()
-      },
+    },
+    mounted() {
+      this.getdata()
     },
 }
 </script>

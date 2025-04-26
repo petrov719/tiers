@@ -51,7 +51,6 @@ export default {
         },
     },
     mounted() {
-      console.log(this.$route.params)
       axios.post('tierlist_item/index',{item_id: this.$route.params.item_id}).then(response=>{
         // console.log(response.data)
         this.item_id = response.data.id

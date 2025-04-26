@@ -100,7 +100,6 @@ export default {
     mounted() {
       axios.post('tierlisting/index',{tierlist_id: this.$route.params.id}).then(response=>{
             this.tierlist = response.data
-            console.log(this.tierlist)
             this.tierlist_name = response.data.tierlist.name
             this.description = response.data.description
             response.data.tierlisted_items.forEach(element => {

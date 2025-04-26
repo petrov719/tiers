@@ -31,7 +31,6 @@ export default {
         }
     },
     mounted(){
-        console.log(localStorage)
         if(localStorage.currentToken=='null' | localStorage.currentToken==null){
             this.$router.push('/login')
         }
