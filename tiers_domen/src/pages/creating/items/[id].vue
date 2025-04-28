@@ -54,7 +54,6 @@
             loading-text="Грузим"
             no-data-text="Нет данных"
             no-results-text="Нет результатов"
-            hide-default-footer
           >
           <template v-slot:[`item.actions`]="{ item }">
             <v-btn color="blue" @click="edit_tierlist_item(item)"><v-icon>mdi-pen</v-icon></v-btn>
