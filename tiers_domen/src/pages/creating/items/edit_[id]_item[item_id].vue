@@ -1,5 +1,5 @@
 <template>
-    <v-container align="center">
+    <v-container align="center" v-if="user_id==tierlist_user_id">
         <v-row>
         <v-col cols="1">
           <v-btn
@@ -34,14 +34,21 @@ export default {
     data: () => ({
       name:'',
       description:'',
+      item:null,
       item_id:'',
+      user_id:null,
+      tierlist_user_id:null,
     }),
     methods: {
         edit_tierlist_item(){
           if (this.name != '' && this.item_id != ''){
-            axios.post('tierlist_item/edit',{item_id:String(this.item_id), name:this.name, description:this.description}).then(response => {
-              this.$router.push("/creating/items/"+this.$route.params.id)
-            })
+            if(this.item.tierlist_id == this.$route.params.id){
+              axios.post('tierlist_item/edit',{item_id:String(this.item_id), name:this.name, description:this.description}).then(response => {
+                this.$router.push("/creating/items/"+this.$route.params.id)
+              })
+            } else {
+              alert("КЫШ")
+            }
           } else {
             alert("НАЗВАНИЕ!")
           }
@@ -51,8 +58,13 @@ export default {
         },
     },
     mounted() {
+      this.user_id = localStorage.userId
+      axios.post('tierlist/index',{tierlist_id: this.$route.params.id}).then(response=>{
+          this.tierlist_user_id = response.data.user_id
+      })
       axios.post('tierlist_item/index',{item_id: this.$route.params.item_id}).then(response=>{
         // console.log(response.data)
+        this.item = response.data
         this.item_id = response.data.id
         this.name = response.data.name
         this.description = response.data.description

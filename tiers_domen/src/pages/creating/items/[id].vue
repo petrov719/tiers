@@ -1,5 +1,5 @@
 <template>
-    <v-container align="center">
+    <v-container align="center" v-if="tierlist_user_id==user_user_id">
         <v-row>
         <v-col cols="1">
           <v-btn
@@ -73,6 +73,8 @@ export default {
       star_status:false,
       star_permission:false,
       loadTable:false,
+      user_user_id:null,
+      tierlist_user_id:null,
       clone_tierlist:null,
       tierlist_name: null,
       headers:[
@@ -87,6 +89,7 @@ export default {
         this.loadTable = true
         axios.post('tierlist/index',{tierlist_id: this.$route.params.id}).then(response=>{
             this.tierlist_name = response.data.name
+            this.tierlist_user_id = response.data.user_id
         })
         axios.post('tierlist_item/get',{tierlist_id: this.$route.params.id}).then(response=>{
           if(response.data.length == 0){
@@ -123,6 +126,7 @@ export default {
       },
     },
     mounted() {
+      this.user_user_id = localStorage.userId
       this.getdata()
     },
 }
