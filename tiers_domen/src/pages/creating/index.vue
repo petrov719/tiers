@@ -38,8 +38,8 @@
             no-results-text="Нет результатов"
           >
           <template v-slot:[`item.actions`]="{ item }">
-            <v-btn color="blue" @click="edit_tierlist(item)"><v-icon>mdi-pen</v-icon></v-btn>
-            <v-btn color="purple" @click="manage_items(item)"><v-icon>mdi-package-variant-closed</v-icon></v-btn>
+            <v-btn v-if="item.user_id==user_id" color="blue" @click="edit_tierlist(item)"><v-icon>mdi-pen</v-icon></v-btn>
+            <v-btn v-if="item.user_id==user_id" color="purple" @click="manage_items(item)"><v-icon>mdi-package-variant-closed</v-icon></v-btn>
           </template>
           </v-data-table>
         </v-col>
@@ -54,6 +54,7 @@ export default {
     name:"CreatingMain",
     data: () => ({
       loadTable:false,
+      user_id: null,
       headers:[
         { title: 'Название', align: 'center', key: 'name'},
         { title: 'Описание', align: 'center', key: 'description'},
@@ -79,6 +80,7 @@ export default {
       },
     },
     mounted() {
+      this.user_id = localStorage.userId
       this.getdata()
     },
 }
