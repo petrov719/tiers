@@ -1,5 +1,5 @@
 <template>
-    <v-container align="center">
+    <v-container align="center" v-if="user_id == tierlist_user_id">
       <v-row>
         <v-col cols="1">
           <v-btn
@@ -57,7 +57,9 @@ export default {
     data: () => ({
         description:null,
         tierlist_name:null,
+        user_id:null,
         tierlist:null,
+        tierlist_user_id:null,
         target_item:{id : 0},
         tierlist_items:[[],[],[],[],[],[]],
         params:[{
@@ -98,13 +100,15 @@ export default {
       }
     },
     mounted() {
+      this.user_id = localStorage.userId
       axios.post('tierlisting/index',{tierlist_id: this.$route.params.id}).then(response=>{
-            this.tierlist = response.data
-            this.tierlist_name = response.data.tierlist.name
-            this.description = response.data.description
-            response.data.tierlisted_items.forEach(element => {
-                this.tierlist_items[element.tier].push(element)
-            });
+        this.tierlist = response.data
+        this.tierlist_user_id = response.data.user_id
+        this.tierlist_name = response.data.tierlist.name
+        this.description = response.data.description
+        response.data.tierlisted_items.forEach(element => {
+            this.tierlist_items[element.tier].push(element)
+        });
         })
     },
 }
