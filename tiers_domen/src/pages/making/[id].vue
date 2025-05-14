@@ -32,10 +32,14 @@
             <v-col>
               <v-card
                 height="50"
+                width="70"
                 :color="target_item.id == itemi.id ? 'red' : 'grey'"
+                :class="target_item.id == itemi.id ? 'border-xl' : ''"
                 @click="target(itemi)"
               >
-                <v-card-title>{{ itemi.tierlist_item.name }}
+                <v-img :src="imagexd(itemi)" aspect-ratio="1" cover max-width="80"></v-img>
+                <v-card-title>
+                  <!-- {{ itemi.tierlist_item.name }} -->
                 </v-card-title>
               </v-card>
             </v-col>
@@ -89,19 +93,29 @@ export default {
         })
       },
       transform(index){
-        let index_item = this.tierlist_items[this.target_item.tier].findIndex(item => item.id == this.target_item.id)
-        this.tierlist_items[this.target_item.tier].splice(index_item, 1)
-        this.target_item.tier = index
-        this.tierlist_items[index].push(this.target_item)
-        this.target_item = {id : 0}
+        if(this.tierlist_items[this.target_item.tier] != undefined){
+          let index_item = this.tierlist_items[this.target_item.tier].findIndex(item => item.id == this.target_item.id)
+          this.tierlist_items[this.target_item.tier].splice(index_item, 1)
+          this.target_item.tier = index
+          this.tierlist_items[index].push(this.target_item)
+          this.target_item = {id : 0}
+        }
       },
       target(item){
         this.target_item = item
-      }
+      },
+      imagexd(item){
+        if(item.tierlist_item.image_name){
+          return `data:image/png;base64,${item.tierlist_item.image_base64}`;
+        } else {
+          return require('@/assets/black.png')
+        }
+      },
     },
     mounted() {
       this.user_id = localStorage.userId
       axios.post('tierlisting/index',{tierlist_id: this.$route.params.id}).then(response=>{
+        console.log(response.data)
         this.tierlist = response.data
         this.tierlist_user_id = response.data.user_id
         this.tierlist_name = response.data.tierlist.name

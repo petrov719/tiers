@@ -21,6 +21,11 @@
       </v-row>
       <v-row>
         <v-col>
+          <FileUpload :maxSize="5" accept="png" @file-uploaded="getUploadedData"></FileUpload>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
           <v-btn class="button" min-width="200" color="green" @click="create_tierlist_item()">Создать</v-btn>
         </v-col>
       </v-row>
@@ -28,19 +33,32 @@
 </template>
   
 <script>
+import FileUpload from '@/components/FileUpload.vue'
 import axios from 'axios'
 export default {
+    components: {FileUpload},
     name:"CreatingItemsCreate",
     data: () => ({
       name:'',
       description:'',
       tierlist_user_id:null,
       user_id:null,
+      file: null,
     }),
     methods: {
+      getUploadedData(file) {
+        this.file = file;
+      },
       create_tierlist_item(){
         if (this.name != ''){
-          axios.post('tierlist_item/create',{name: this.name, description: this.description, tierlist_id: this.$route.params.id}).then(response => {
+          const formData = new FormData();
+          if (this.file) {
+            formData.append("file", this.file.rawFile);
+          }
+          formData.append("name", this.name);
+          formData.append("description", this.description ? this.description : '');
+          formData.append("tierlist_id", this.$route.params.id);
+          axios.post('tierlist_item/create', formData).then(response => {
             this.$router.push('/creating/items/' + this.$route.params.id)
           })
         } else {
@@ -51,9 +69,9 @@ export default {
           console.log(this.name)
       },
       getdata(){
-      axios.post('tierlist/index',{tierlist_id: this.$route.params.id}).then(response=>{
-          this.tierlist_user_id = response.data.user_id
-      })
+        axios.post('tierlist/index',{tierlist_id: this.$route.params.id}).then(response=>{
+            this.tierlist_user_id = response.data.user_id
+        })
       }
     },
     mounted() {

@@ -11,6 +11,8 @@ class TierlistItem extends Model
 
     protected $fillable = [
         'name',
+        'image',
+        'image_name',
     ];
 
     public function tierlist()

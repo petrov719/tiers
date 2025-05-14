@@ -7,12 +7,21 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\TierlistedTierlist;
 use App\Models\TierlistedItem;
+use Illuminate\Support\Facades\Storage;
 
 class TierlistingController extends Controller
 {
     public function index(Request $request)
     {
         $tierlist = TierlistedTierlist::where('id',$request->tierlist_id)->with('tierlisted_items','tierlist','tierlisted_items.tierlist_item')->first();
+        $tierlisted_items = $tierlist->tierlisted_items;
+        foreach($tierlisted_items as $item1) {
+            $item = $item1->tierlist_item;
+            if ($item->image && Storage::disk('public')->exists($item->image)) {
+                $fileContent = Storage::disk('public')->get($item->image);
+                $item->image_base64 = base64_encode($fileContent); // Кодируем содержимое файла в Base64
+            }
+        }
         return $tierlist;
     }
     public function create(Request $request)

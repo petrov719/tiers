@@ -21,6 +21,11 @@
       </v-row>
       <v-row>
         <v-col>
+          <FileUpload v-if="render" :maxSize="5" :fileName="fileName" accept="png" :externalFile="file" @file-uploaded="getUploadedData"></FileUpload>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
           <v-btn class="button" min-width="200" color="green" @click="edit_tierlist_item()">Изменить</v-btn>
         </v-col>
       </v-row>
@@ -28,11 +33,16 @@
 </template>
   
 <script>
+import FileUpload from '@/components/FileUpload.vue'
 import axios from 'axios'
 export default {
+    components: {FileUpload},
     name:"EditItems",
+    file:null,
     data: () => ({
+      render:false,
       name:'',
+      fileName:null,
       description:'',
       item:null,
       item_id:'',
@@ -41,9 +51,17 @@ export default {
     }),
     methods: {
         edit_tierlist_item(){
-          if (this.name != '' && this.item_id != ''){
+          if ((this.name != '') && this.item_id != ''){
             if(this.item.tierlist_id == this.$route.params.id){
-              axios.post('tierlist_item/edit',{item_id:String(this.item_id), name:this.name, description:this.description}).then(response => {
+              const formData = new FormData();
+              if (this.file) {
+                formData.append("file", this.file.rawFile);
+                formData.append("filename", this.file.name);
+              }
+              formData.append("name", this.name);
+              formData.append("description", this.description);
+              formData.append("item_id", this.item_id);
+              axios.post('tierlist_item/edit', formData).then(response => {
                 this.$router.push("/creating/items/"+this.$route.params.id)
               })
             } else {
@@ -52,6 +70,9 @@ export default {
           } else {
             alert("НАЗВАНИЕ!")
           }
+        },
+        getUploadedData(file) {
+          this.file = file;
         },
         check(){
             console.log(this.name)
@@ -63,11 +84,22 @@ export default {
           this.tierlist_user_id = response.data.user_id
       })
       axios.post('tierlist_item/index',{item_id: this.$route.params.item_id}).then(response=>{
-        // console.log(response.data)
-        this.item = response.data
-        this.item_id = response.data.id
-        this.name = response.data.name
-        this.description = response.data.description
+        if (response.data.success == true){
+          this.item = response.data.tierlist_item
+          this.item_id = response.data.tierlist_item.id
+          this.name = response.data.tierlist_item.name
+          this.description = response.data.tierlist_item.description ? response.data.tierlist_item.description : ''
+          this.file = response.data.file_base64;
+          this.fileName = response.data.tierlist_item.image_name;
+        } else if (response.data.success == "without_file") {
+          this.item = response.data.tierlist_item
+          this.item_id = response.data.tierlist_item.id
+          this.name = response.data.tierlist_item.name
+          this.description = response.data.tierlist_item.description
+        } else {
+          alert(response.data.data)
+        }
+        this.render = true
       })
     },
 }

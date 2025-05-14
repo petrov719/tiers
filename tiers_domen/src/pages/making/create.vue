@@ -38,11 +38,15 @@
               <v-col>
                 <v-card
                   height="50"
+                  width="70"
+                  :class="target_item.id == itemi.id ? 'border-xl' : ''"
                   :color="target_item.id == itemi.id ? 'red' : 'grey'"
                   @click="target(itemi)"
                 >
-                  <v-card-title>{{ itemi.name }}
-                  </v-card-title>
+                <v-img :src="imagexd(itemi)" aspect-ratio="1" cover max-width="80"></v-img>
+                <v-card-title>
+                  <!-- {{ itemi.name }} -->
+                </v-card-title>
                 </v-card>
               </v-col>
             </v-xd>
@@ -90,12 +94,13 @@ export default {
     methods: {
       getitems(){
         axios.post('tierlist_item/get', {tierlist_id: this.tierlist_id}).then(response=>{
-            this.tierlist_items = [[],[],[],[],[],[]]
-            this.target_item = {id : 0}
-            for(let i = 0;i<response.data.length;i++){
-              response.data[i].tier = 5
-            }
-            this.tierlist_items[5] = response.data
+          console.log(response.data)
+          this.tierlist_items = [[],[],[],[],[],[]]
+          this.target_item = {id : 0}
+          for(let i = 0;i<response.data.length;i++){
+            response.data[i].tier = 5
+          }
+          this.tierlist_items[5] = response.data
         })
       },
       check(){
@@ -107,15 +112,37 @@ export default {
         })
       },
       transform(index){
-        let index_item = this.tierlist_items[this.target_item.tier].findIndex(item => item.id == this.target_item.id)
-        this.tierlist_items[this.target_item.tier].splice(index_item, 1)
-        this.target_item.tier = index
-        this.tierlist_items[index].push(this.target_item)
-        this.target_item = {id : 0}
+        if(this.tierlist_items[this.target_item.tier] != undefined){
+          let index_item = this.tierlist_items[this.target_item.tier].findIndex(item => item.id == this.target_item.id)
+          this.tierlist_items[this.target_item.tier].splice(index_item, 1)
+          this.target_item.tier = index
+          this.tierlist_items[index].push(this.target_item)
+          this.target_item = {id : 0}
+        }
       },
       target(item){
         this.target_item = item
+      },
+      base64ToFile(base64String, fileName, mimeType) {
+      const byteString = atob(base64String.split(",")[0]); // Декодируем Base64
+      const arrayBuffer = new ArrayBuffer(byteString.length);
+      const uint8Array = new Uint8Array(arrayBuffer);
+      for (let i = 0; i < byteString.length; i++) {
+        uint8Array[i] = byteString.charCodeAt(i);
       }
+      const blob = new Blob([uint8Array], { type: mimeType });
+      return new File([blob], fileName, { type: mimeType });
+    },
+      imagexd(item){
+        if(item.image_name){
+          return `data:image/png;base64,${item.image_base64}`;
+        } else {
+          return require('@/assets/black.png')
+        }
+      },
+    },
+    computed: {
+      
     },
     mounted() {
       axios.post('tierlist/get').then(response=>{
