@@ -87,11 +87,11 @@ export default {
     methods: {
       getdata(){
         this.loadTable = true
-        axios.post('tierlist/index',{tierlist_id: this.$route.params.id}).then(response=>{
+        axios.post('api/tierlist/index',{tierlist_id: this.$route.params.id}).then(response=>{
             this.tierlist_name = response.data.name
             this.tierlist_user_id = response.data.user_id
         })
-        axios.post('tierlist_item/get',{tierlist_id: this.$route.params.id}).then(response=>{
+        axios.post('api/tierlist_item/get',{tierlist_id: this.$route.params.id}).then(response=>{
           if(response.data.length == 0){
             this.star_permission = true
           } else {
@@ -103,7 +103,7 @@ export default {
         })
       },
       get_clone(){
-        axios.post('tierlist/get').then(response=>{
+        axios.post('api/tierlist/get').then(response=>{
           this.clone_tierlists = response.data
           this.star_status = true
         })
@@ -112,7 +112,7 @@ export default {
         this.$router.push('/creating/items/edit_'+this.$route.params.id+'a'+data.id)
       },
       clone(){
-        axios.post('tierlist_item/clone',{ot: this.clone_tierlist, to: this.$route.params.id}).then(response=>{
+        axios.post('api/tierlist_item/clone',{ot: this.clone_tierlist, to: this.$route.params.id}).then(response=>{
             this.getdata()
         })
       },
@@ -120,13 +120,15 @@ export default {
         console.log(this.clone_tierlist)
       },
       mounted() {
-        axios.post('tierlist/index',{tierlist_id: this.$route.params.id}).then(response=>{
+        axios.post('api/tierlist/index',{tierlist_id: this.$route.params.id}).then(response=>{
             this.tierlist_name = response.data.name
         })
       },
     },
     mounted() {
-      this.user_user_id = localStorage.userId
+      this.$store.dispatch('get_user_id').then(result => {
+        this.user_id = result;
+      });
       this.getdata()
     },
 }

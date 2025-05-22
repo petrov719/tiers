@@ -52,6 +52,7 @@ import axios from 'axios';
 export default {
     name:'MakingIndexPage',
     data: () => ({
+      user_id: null,
       loadTable:false,
       headers:[
         { title: 'Название тирлиста', align: 'center', key: 'tierlist.name'},
@@ -63,7 +64,7 @@ export default {
     methods: {
       getdata(){
         this.loadTable = true
-        axios.post('tierlisting/get_by_user_id',{user_id: localStorage.userId}).then(response=>{
+        axios.post('api/tierlisting/get_by_user_id',{user_id: this.user_id}).then(response=>{
           this.tierlists = response.data
           this.loadTable = false
         })
@@ -73,6 +74,9 @@ export default {
       },
     },
     mounted() {
+      this.$store.dispatch('get_user_id').then(result => {
+        this.user_id = result;
+      });
       this.getdata()
     },
 }

@@ -39,7 +39,7 @@ export default {
     methods: {
         edit_tierlist(){
           if (this.name != '' && this.tierlist_id != ''){
-            axios.post('tierlist/edit',{tierlist_id:String(this.tierlist_id), name:this.name, description:this.description}).then(response => {
+            axios.post('api/tierlist/edit',{tierlist_id:String(this.tierlist_id), name:this.name, description:this.description}).then(response => {
               this.$router.push('/creating')
             })
           } else {
@@ -51,7 +51,7 @@ export default {
         },
     },
     mounted() {
-      axios.post('tierlist/index',{tierlist_id: this.$route.params.id}).then(response=>{
+      axios.post('api/tierlist/index',{tierlist_id: this.$route.params.id}).then(response=>{
         this.tierlist_id = response.data.id
         this.name = response.data.name
         this.description = response.data.description

@@ -88,7 +88,7 @@ export default {
     }),
     methods: {
       save(){
-        axios.post('tierlisting/edit',{items: this.tierlist_items,user: localStorage.userId,description:this.description, tierlist_id: String(this.tierlist.tierlist.id),old_tierlist_id:String(this.tierlist.id)}).then(response=>{
+        axios.post('api/tierlisting/edit',{items: this.tierlist_items,user: this.user_id,description:this.description, tierlist_id: String(this.tierlist.tierlist.id),old_tierlist_id:String(this.tierlist.id)}).then(response=>{
           this.$router.push('/making')
         })
       },
@@ -113,8 +113,10 @@ export default {
       },
     },
     mounted() {
-      this.user_id = localStorage.userId
-      axios.post('tierlisting/index',{tierlist_id: this.$route.params.id}).then(response=>{
+      this.$store.dispatch('get_user_id').then(result => {
+        this.user_id = result;
+      });
+      axios.post('api/tierlisting/index',{tierlist_id: this.$route.params.id}).then(response=>{
         console.log(response.data)
         this.tierlist = response.data
         this.tierlist_user_id = response.data.user_id

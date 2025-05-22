@@ -68,6 +68,7 @@ export default {
     data: () => ({
         description:null,
         tierlist_id:null,
+        user_id: null,
         tierlists:[],
         target_item:{id : 0},
         tierlist_items:[[],[],[],[],[],[]],
@@ -93,7 +94,7 @@ export default {
     }),
     methods: {
       getitems(){
-        axios.post('tierlist_item/get', {tierlist_id: this.tierlist_id}).then(response=>{
+        axios.post('api/tierlist_item/get', {tierlist_id: this.tierlist_id}).then(response=>{
           console.log(response.data)
           this.tierlist_items = [[],[],[],[],[],[]]
           this.target_item = {id : 0}
@@ -107,7 +108,7 @@ export default {
         console.log(this.tierlist_id)
       },
       save(){
-        axios.post('tierlisting/create',{items: this.tierlist_items,user: localStorage.userId,description:this.description, tierlist_id: String(this.tierlist_id)}).then(response=>{
+        axios.post('api/tierlisting/create',{items: this.tierlist_items,user: this.user_id,description:this.description, tierlist_id: String(this.tierlist_id)}).then(response=>{
           this.$router.push('/making')
         })
       },
@@ -145,7 +146,10 @@ export default {
       
     },
     mounted() {
-      axios.post('tierlist/get').then(response=>{
+      this.$store.dispatch('get_user_id').then(result => {
+        this.user_id = result;
+      });
+      axios.post('api/tierlist/get').then(response=>{
             this.tierlists = response.data
         })
     },

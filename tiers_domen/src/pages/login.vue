@@ -27,15 +27,17 @@ export default {
         logindata:{mail:'', password:''},
     }),
     methods: {
-        Login(){
-          axios.post('auth/login',{email:this.logindata.mail, password:this.logindata.password}).then(response => {
+        async Login(){
+          await axios.get('/sanctum/csrf-cookie');
+          axios.post('api/login',{email:this.logindata.mail, password:this.logindata.password}).then(response => {
+            console.log(response.data)
             localStorage.currentToken = response.data.token
-            localStorage.userId = response.data.user.id
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.currentToken;
             this.$router.push('/')
           }).catch(error => {
-                this.logindata.mail= '',
-                this.logindata.password= ''
-            })
+            this.logindata.mail= '',
+            this.logindata.password= ''
+          })
         },
     },
     mounted() {

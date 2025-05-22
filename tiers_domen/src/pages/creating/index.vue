@@ -63,15 +63,16 @@ export default {
       tierlists:[],
     }),
     methods: {
-      getdata(){
+      async getdata(){
         this.loadTable = true
-        axios.post('tierlist/get').then(response=>{
+        // await axios.get('/sanctum/csrf-cookie');
+        axios.post('api/tierlist/get').then(response=>{
           this.tierlists = response.data
           this.loadTable = false
         })
       },
       manage_items(tierlist){
-        axios.post('tierlist/index',{tierlist_id: tierlist.id}).then(response=>{
+        axios.post('api/tierlist/index',{tierlist_id: tierlist.id}).then(response=>{
           this.$router.push('/creating/items/'+tierlist.id)
         })
       },
@@ -80,7 +81,9 @@ export default {
       },
     },
     mounted() {
-      this.user_id = localStorage.userId
+      this.$store.dispatch('get_user_id').then(result => {
+        this.user_id = result;
+      });
       this.getdata()
     },
 }

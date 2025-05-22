@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name:'MainPage',
   data: () => ({
@@ -27,7 +28,10 @@ export default {
   }),
   methods: {
     check(){
-      alert("В ПРОЦЕСЕ")
+      // alert("В ПРОЦЕСЕ")
+      // this.$store.dispatch('get_user_id').then(result => {
+      //   console.log(result); // здесь будет ваша цифра
+      // });
     }
   },
   mounted() {

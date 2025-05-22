@@ -21,35 +21,40 @@ use App\Http\Controllers\AuthController;
 |
 */
 
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
 // Route::post('/auth/register', [AuthController::class, 'register']);
-Route::post('/auth/login', [AuthController::class, 'login']);
-Route::post('/auth/logout', [AuthController::class, 'logout']);
+Route::post('/login', [AuthController::class, 'login']);
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-
-Route::prefix('tierlist')->group(function()
-{
-  Route::post('/index',[TierlistController::class, 'index']);
-  Route::post('/index_with_items',[TierlistController::class, 'index_with_items']);
-  Route::post('/create',[TierlistController::class, 'create']);
-  Route::post('/get',[TierlistController::class, 'get']);
-  Route::post('/edit',[TierlistController::class, 'edit']);
-  Route::post('/xd',[TierlistController::class, 'xd']);
+Route::group(['middleware' => 'auth:sanctum'], function() {
+  Route::get('/user', function (Request $request) {return $request->user();});
+  Route::post('/logout', [AuthController::class, 'logout']);
+  Route::prefix('tierlist')->group(function()
+  {
+    Route::post('/index',[TierlistController::class, 'index']);
+    Route::post('/index_with_items',[TierlistController::class, 'index_with_items']);
+    Route::post('/create',[TierlistController::class, 'create']);
+    Route::post('/get',[TierlistController::class, 'get']);
+    Route::post('/edit',[TierlistController::class, 'edit']);
+    Route::post('/xd',[TierlistController::class, 'xd']);
+    });
+  Route::prefix('tierlist_item')->group(function()
+  {
+    Route::post('/index',[TierlistItemController::class, 'index']);
+    Route::post('/create',[TierlistItemController::class, 'create']);
+    Route::post('/get',[TierlistItemController::class, 'get']);
+    Route::post('/edit',[TierlistItemController::class, 'edit']);
+    Route::post('/clone',[TierlistItemController::class, 'clone']);
+  }); 
+  Route::prefix('tierlisting')->group(function()
+  {
+    Route::post('/index',[TierlistingController::class, 'index']);
+    Route::post('/create',[TierlistingController::class, 'create']);
+    Route::post('/edit',[TierlistingController::class, 'edit']);
+    Route::post('/get_by_user_id',[TierlistingController::class, 'get_by_user_id']);
   });
-Route::prefix('tierlist_item')->group(function()
-{
-  Route::post('/index',[TierlistItemController::class, 'index']);
-  Route::post('/create',[TierlistItemController::class, 'create']);
-  Route::post('/get',[TierlistItemController::class, 'get']);
-  Route::post('/edit',[TierlistItemController::class, 'edit']);
-  Route::post('/clone',[TierlistItemController::class, 'clone']);
-}); 
-Route::prefix('tierlisting')->group(function()
-{
-  Route::post('/index',[TierlistingController::class, 'index']);
-  Route::post('/create',[TierlistingController::class, 'create']);
-  Route::post('/edit',[TierlistingController::class, 'edit']);
-  Route::post('/get_by_user_id',[TierlistingController::class, 'get_by_user_id']);
 });

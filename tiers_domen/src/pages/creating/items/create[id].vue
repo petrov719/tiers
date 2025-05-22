@@ -58,7 +58,7 @@ export default {
           formData.append("name", this.name);
           formData.append("description", this.description ? this.description : '');
           formData.append("tierlist_id", this.$route.params.id);
-          axios.post('tierlist_item/create', formData).then(response => {
+          axios.post('api/tierlist_item/create', formData).then(response => {
             this.$router.push('/creating/items/' + this.$route.params.id)
           })
         } else {
@@ -69,13 +69,15 @@ export default {
           console.log(this.name)
       },
       getdata(){
-        axios.post('tierlist/index',{tierlist_id: this.$route.params.id}).then(response=>{
+        axios.post('api/tierlist/index',{tierlist_id: this.$route.params.id}).then(response=>{
             this.tierlist_user_id = response.data.user_id
         })
       }
     },
     mounted() {
-      this.user_id = localStorage.userId
+      this.$store.dispatch('get_user_id').then(result => {
+        this.user_id = result;
+      });
       this.getdata()
     },
 }

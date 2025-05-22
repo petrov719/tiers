@@ -33,12 +33,13 @@ export default {
     name:"CreatingTierlistCreatePage",
     data: () => ({
       name:'',
+      user_id: null,
       description:'',
     }),
     methods: {
         create_tierlist(){
           if (this.name != ''){
-            axios.post('tierlist/create',{name: this.name, description: this.description, user_id: localStorage.userId}).then(response => {
+            axios.post('api/tierlist/create',{name: this.name, description: this.description, user_id: this.user_id}).then(response => {
               this.$router.push('/creating')
             })
           } else {
@@ -50,7 +51,9 @@ export default {
         },
     },
     mounted() {
-
+      this.$store.dispatch('get_user_id').then(result => {
+        this.user_id = result;
+      });
     },
 }
 </script>
