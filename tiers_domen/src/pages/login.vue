@@ -30,9 +30,7 @@ export default {
         async Login(){
           await axios.get('/sanctum/csrf-cookie');
           axios.post('api/login',{email:this.logindata.mail, password:this.logindata.password}).then(response => {
-            console.log(response.data)
-            localStorage.currentToken = response.data.token
-            axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.currentToken;
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token;
             this.$router.push('/')
           }).catch(error => {
             this.logindata.mail= '',

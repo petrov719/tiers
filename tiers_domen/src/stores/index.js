@@ -6,8 +6,16 @@ import axios from 'axios'
 export const store = createStore({
   actions: {
     async get_user_id(){
-        const response = await axios.get('api/user');
-        return response.data.id
+        try {
+          const response = await axios.get('api/user');
+          if (response.data && response.data.id !== undefined) {
+            return response.data.id;
+          } else {
+            return null;
+          }
+        } catch (error) {
+          return null;
+        }
     }
   }
 })

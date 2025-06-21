@@ -15,6 +15,7 @@
     </v-app>
 </template>
 <script>
+import axios from 'axios'
 export default {
     name: 'DefaultLayout',
     data: () => ({
@@ -22,18 +23,26 @@ export default {
     }),
     methods: {
         authget(){
-            if(localStorage.currentToken!=null){
-                this.$router.push('/')
-            }
+            this.$store.dispatch('get_user_id').then(result => {
+                if(result!=null){
+                    this.$router.push('/')
+                }
+            });
         },
         logout(){
-            localStorage.currentToken = 'null'
+            axios.post('api/logout',{}).then(response => {
+            axios.defaults.headers.common['Authorization'] = '';
+            this.$router.push('/login')
+          }).catch(error => {
+          })
         }
     },
     mounted(){
-        if(localStorage.currentToken=='null' | localStorage.currentToken==null){
-            this.$router.push('/login')
-        }
+        this.$store.dispatch('get_user_id').then(result => {
+            if(result==null){
+                this.$router.push('/login')
+            }
+        });
     }
 }
 </script>
